@@ -1,0 +1,29 @@
+﻿<Window x:Class="Smart_school_bell.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:viewModel="clr-namespace:Smart_school_bell.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:smartSchoolBell="clr-namespace:Smart_school_bell"
+        mc:Ignorable="d"
+        MinHeight="150" MinWidth="780"
+        Title="Smart School Bell">
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="500*"/>
+            </Grid.RowDefinitions>
+            <Menu Grid.Row="0" Grid.ColumnSpan="2">
+                <MenuItem Header="Расписания" Command="{Binding ComGoSchedules}"/>
+                <MenuItem Header="История" Command="{Binding ComGoHistory}"/>
+            </Menu>
+        <Frame
+                NavigationUIVisibility="Hidden"
+                Content="{Binding MainFrame}" Grid.Row="1"/>
+    </Grid>
+</Window>

@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Smart_school_bell.View.DialogNewTimetable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Smart_school_bell.View"
+             xmlns:viewModel="clr-namespace:Smart_school_bell.ViewModel"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}" Height="160" Width="250">
+
+    <UserControl.DataContext>
+        <viewModel:DialogNewTimetableViewModel/>
+    </UserControl.DataContext>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="46"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="8"
+                   Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                   Text="Создание расписания"/>
+
+        <TextBox Grid.Row="1" Margin="10,0,10,10"
+                 Text="{Binding TextName, ValidatesOnDataErrors=True
+            ,UpdateSourceTrigger=PropertyChanged}"
+                 materialDesign:HintAssist.Hint="Название"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" >
+            <TextBox.InputBindings>
+                <KeyBinding Command="{Binding ComNewItem}" Key="Enter" />
+            </TextBox.InputBindings>
+        </TextBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Width="198" >
+            <Button Margin="8" Content="Отмена" Command="{Binding ComCancel}" 
+                    Style="{StaticResource MaterialDesignFlatButton}"></Button>
+            <Button Margin="8" 
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    IsEnabled="{Binding IsEnabledButtonCreate}"
+                    Content="Создать" Command="{Binding ComNewItem}"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
