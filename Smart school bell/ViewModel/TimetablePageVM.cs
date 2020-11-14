@@ -50,6 +50,8 @@ namespace Smart_school_bell.ViewModel
             {
                 using (var context = new DatabaseContext())
                 {
+                    History.GetToDatabase(new History(DateTime.Now, "Файл звука звонка изменён с " + TextUriFile + " на " + value
+                    + " в " + context.Timetables.Find(TimetableId).Name));
                     context.Timetables.Find(TimetableId).UriFile = value;
                     context.SaveChanges();           
                 }
@@ -158,20 +160,25 @@ namespace Smart_school_bell.ViewModel
                         {
                             foreach (var timeBell in timetableDayOfWeek.TimeBells)
                                 if (hour == timeBell.Hour && min == timeBell.Min)
+                                {
                                     isEqual = true;
+                                    break;
+                                }
                         }
                     }
                 }
 
                 if (isEqual)
-                    MessageBox.Show("Звонок на такое время уже существует", "Ошибка создания звонка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Звонок на такое время уже существует", "Ошибка создания звонка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 else
                 {
                     List<TimetableDayOfWeek.TimeHourMin> timeBels = context.TimetableDayOfWeeks.Find(timetableDayOfWeekId).TimeBells;
                     timeBels.Add(new TimetableDayOfWeek.TimeHourMin(hour, min));
                     context.TimetableDayOfWeeks.Find(timetableDayOfWeekId).TimeBells = timeBels;
-
                     context.SaveChanges();
+
+                    History.GetToDatabase(new History(DateTime.Now, "Звонок на "
+                                                                    + new TimetableDayOfWeek.TimeHourMin(hour, min).Time+ " создан в расписании " + context.Timetables.Find(TimetableId).Name));
                     Timetable.StartTimerBell();
                     MenuNavigationChoice(menuNavigationDayOfWeek);
                 }
@@ -185,6 +192,8 @@ namespace Smart_school_bell.ViewModel
             {
                 List<TimetableDayOfWeek.TimeHourMin> timeBels = context.TimetableDayOfWeeks.Find(timetableDayOfWeekId).TimeBells;
                 timeBels.Sort(new SortTimeHourMinModel());
+                History.GetToDatabase(new History(DateTime.Now, "Звонок на "+ timeBels[listId].Time
+                                      + " удалён из расписания " + context.Timetables.Find(TimetableId).Name));
                 timeBels.RemoveAt(listId);
                 context.TimetableDayOfWeeks.Find(timetableDayOfWeekId).TimeBells = timeBels;
                 context.SaveChanges();
@@ -277,43 +286,6 @@ namespace Smart_school_bell.ViewModel
 
         public string importOutJson;
 
-        private void DeleteData()
-        {
-        }
-        private void ImportData()
-        {
-            using (var context = new DatabaseContext())
-            {
-                switch (menuNavigationDayOfWeek)
-                {
-                    case "Пн.":
-                        context.Timetables.Find(TimetableId).Monday.TimeBellJSON = importOutJson;
-                        break;
-
-                    case "Вт.":
-                        context.Timetables.Find(TimetableId).Tuesday.TimeBellJSON = importOutJson;
-                        break;
-
-                    case "Ср.":
-                        context.Timetables.Find(TimetableId).Wednesday.TimeBellJSON = importOutJson;
-                        break;
-
-                    case "Чт.":
-                        context.Timetables.Find(TimetableId).Thursday.TimeBellJSON = importOutJson;
-                        break;
-
-                    case "Пт.":
-                        context.Timetables.Find(TimetableId).Friday.TimeBellJSON = importOutJson;
-                        break;
-
-                    case "Су.":
-                        context.Timetables.Find(TimetableId).Saturday.TimeBellJSON = importOutJson;
-                        break;
-                }
-                context.SaveChanges();
-            }
-            MenuNavigationChoice(menuNavigationDayOfWeek);
-        }
 
         public ICommand ComDeleteMenuNavigation
         {
@@ -351,7 +323,9 @@ namespace Smart_school_bell.ViewModel
                                 break;
                         }
                         context.SaveChanges();
+                        History.GetToDatabase(new History(DateTime.Now, (string)o + " из расписании " + context.Timetables.Find(TimetableId).Name+" очищен(а)"));
                     }
+                    
                     MenuNavigationChoice(menuNavigationDayOfWeek);
                 });
             }
@@ -390,8 +364,37 @@ namespace Smart_school_bell.ViewModel
                                 importOutJson = context.Timetables.Find(TimetableId).Saturday.TimeBellJSON;
                                 break;
                         }
+
+                        switch (menuNavigationDayOfWeek)
+                        {
+                            case "Пн.":
+                                context.Timetables.Find(TimetableId).Monday.TimeBellJSON = importOutJson;
+                                break;
+
+                            case "Вт.":
+                                context.Timetables.Find(TimetableId).Tuesday.TimeBellJSON = importOutJson;
+                                break;
+
+                            case "Ср.":
+                                context.Timetables.Find(TimetableId).Wednesday.TimeBellJSON = importOutJson;
+                                break;
+
+                            case "Чт.":
+                                context.Timetables.Find(TimetableId).Thursday.TimeBellJSON = importOutJson;
+                                break;
+
+                            case "Пт.":
+                                context.Timetables.Find(TimetableId).Friday.TimeBellJSON = importOutJson;
+                                break;
+
+                            case "Су.":
+                                context.Timetables.Find(TimetableId).Saturday.TimeBellJSON = importOutJson;
+                                break;
+                        }
+                        context.SaveChanges();
+                        History.GetToDatabase(new History(DateTime.Now, "В расписании " + context.Timetables.Find(TimetableId).Name+ " импорт с " + (string)o + " на " + menuNavigationDayOfWeek));
                     }
-                    ImportData();
+                    MenuNavigationChoice(menuNavigationDayOfWeek);
 
                 });
 

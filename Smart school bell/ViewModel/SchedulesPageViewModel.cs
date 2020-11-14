@@ -96,7 +96,7 @@ namespace Smart_school_bell.ViewModel
                     = context.Timetables.Find(context.Timetables.Count()).Id;
                 context.Timetables.Find(context.Timetables.Count()).Saturday.TimetableId
                     = context.Timetables.Find(context.Timetables.Count()).Id;
-                context.Histories.Add(new History(DateTime.Now, "Создано расписание " + name));
+                History.GetToDatabase(new History(DateTime.Now, "Создано расписание " + name));
                 context.SaveChanges();
                 
             }
@@ -177,7 +177,7 @@ namespace Smart_school_bell.ViewModel
                 context.SaveChanges();
 
                 context.Timetables.Remove(context.Timetables.Find(id));
-                context.Histories.Add(new History(DateTime.Now, "Удалено расписание" + timetable.Name));
+                History.GetToDatabase(new History(DateTime.Now, "Удалено расписание " + timetable.Name));
                 context.SaveChanges();
                 
             }
@@ -189,13 +189,14 @@ namespace Smart_school_bell.ViewModel
         {
             using (var context = new DatabaseContext())
             {
-                context.Histories.Add(new History(DateTime.Now, "Расписание переименовано с "
+                History.GetToDatabase(new History(DateTime.Now, "Расписание переименовано с "
                                                                 + context.Timetables.Find(id).Name +
                                                                 " на " + name));
 
                 context.Timetables.Find(id).Name = name;
                 context.SaveChanges();
             }
+            
             LoadingTimetables();
         }
 

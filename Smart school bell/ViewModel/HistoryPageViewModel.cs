@@ -30,6 +30,7 @@ namespace Smart_school_bell.ViewModel
                 foreach (var item in context.Histories)
                 {
                     DataGridHistoryItems.Add(item);
+                    DataGridHistoryItems.Reverse();
                 }
                 OnPropertyChanged("DataGridHistoryItems");
             }

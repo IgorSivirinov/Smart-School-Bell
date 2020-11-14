@@ -16,5 +16,14 @@ namespace Smart_school_bell.Model
             Date = date;
             Change = change;
         }
+
+        public static void GetToDatabase(History history)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Histories.Add(history);
+                context.SaveChanges();
+            }
+        }
     }
 }

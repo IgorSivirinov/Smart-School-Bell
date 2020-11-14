@@ -14,8 +14,8 @@
     <Grid>
         <DataGrid ItemsSource="{Binding DataGridHistoryItems}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Время" Binding="{Binding Path=Date}" CanUserReorder="False" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Изменение" Binding="{Binding Path=Change}" CanUserReorder="False" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Время" Binding="{Binding Path=Date}" CanUserReorder="False" IsReadOnly="True" SortDirection="Descending"/>
+                <DataGridTextColumn Header="Действие" Binding="{Binding Path=Change}" CanUserReorder="False" IsReadOnly="True"/>
             </DataGrid.Columns>
             </DataGrid>
     </Grid>

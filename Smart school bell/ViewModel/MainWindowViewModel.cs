@@ -57,10 +57,7 @@ namespace Smart_school_bell.ViewModel
 
         public MainWindowViewModel()
         {
-            using (var context = new DatabaseContext())
-            {
-                context.Histories.Add(new History(DateTime.Now, "Вход в приложение"));
-            }
+            History.GetToDatabase(new History(DateTime.Now, "Вход в приложение"));
             SchedulesPage page = new SchedulesPage();
             MainFrame = page;
             OnPropertyChanged("MainFrame");
