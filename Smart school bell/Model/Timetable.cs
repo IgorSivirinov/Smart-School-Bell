@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
 using Timer = System.Timers.Timer;
 
 namespace Smart_school_bell.Model
@@ -15,6 +13,7 @@ namespace Smart_school_bell.Model
         public string Name { get; set; }
         public string UriFile { get; set; }
         public int СallDuration { get; set; }
+        public bool Working { get; set; }
 
         public virtual TimetableDayOfWeek Monday { get; set; }
         public virtual TimetableDayOfWeek Tuesday { get; set; }
@@ -26,6 +25,8 @@ namespace Smart_school_bell.Model
         {
             Name = name;
 
+            Working = true;
+
             Monday = new TimetableDayOfWeek(DayOfWeek.Monday);
             Tuesday = new TimetableDayOfWeek(DayOfWeek.Tuesday);
             Wednesday = new TimetableDayOfWeek(DayOfWeek.Wednesday);
@@ -34,10 +35,10 @@ namespace Smart_school_bell.Model
             Saturday = new TimetableDayOfWeek(DayOfWeek.Saturday);
         }
 
-        public Timetable(){}
+        public Timetable() { }
 
         private static Thread thiredStartMusic = new Thread(() => StartMusic());
-        private static Thread thiredResetTimer= new Thread(() => ResetTimer());
+        private static Thread thiredResetTimer = new Thread(() => ResetTimer());
         private static Timer TimerBell = new Timer();
         private static Timer TimerDayOfWeek = new Timer();
         private static List<TimetableDayOfWeek.TimeHourMin> times = new List<TimetableDayOfWeek.TimeHourMin>();
@@ -51,8 +52,6 @@ namespace Smart_school_bell.Model
 
                 foreach (TimetableDayOfWeek timetableDayOfWeek in context.TimetableDayOfWeeks)
                 {
-
-
                     if (timetableDayOfWeek.DayOfWeek == DateTime.Now.DayOfWeek)
                     {
                         List<TimetableDayOfWeek.TimeHourMin> sortTimeBells = timetableDayOfWeek.TimeBells;
@@ -66,7 +65,8 @@ namespace Smart_school_bell.Model
                                 {
                                     time.Uri = context2.Timetables.Find(timetableDayOfWeek.TimetableId).UriFile;
                                     time.СallDuration = context2.Timetables.Find(timetableDayOfWeek.TimetableId).СallDuration;
-                                    times.Add(time);
+                                    if (context2.Timetables.Find(timetableDayOfWeek.TimetableId).Working)
+                                        times.Add(time);
                                 }
                                 break;
                             }
@@ -85,35 +85,35 @@ namespace Smart_school_bell.Model
                 TimerBell.Interval =
                     1000 * (times[0].Time - new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second))
                     .TotalSeconds;
-                
-                    TimerBell.Elapsed += TimerBell_Elapsed;
-                    TimerBell.AutoReset = false;
-                    TimerBell.Enabled = true;
-                    TimerBell.Start();
 
-                    try
-                    {
-                        TimerDayOfWeek.Interval
-                            = 1000 * new DateTime(DateTime.Now.Year,
-                                    DateTime.Now.Month,
-                                    DateTime.Now.Day + 1, 0, 0, 0)
-                                .Subtract(DateTime.Now)
-                                .TotalSeconds;
-                    }
-                    catch (Exception)
-                    {
-                        TimerDayOfWeek.Interval
-                            = 1000 * new DateTime(DateTime.Now.Year,
-                                    DateTime.Now.Month + 1,
-                                    1, 0, 0, 0)
-                                .Subtract(DateTime.Now)
-                                .TotalSeconds;
-                    }
+                TimerBell.Elapsed += TimerBell_Elapsed;
+                TimerBell.AutoReset = false;
+                TimerBell.Enabled = true;
+                TimerBell.Start();
+
+                try
+                {
+                    TimerDayOfWeek.Interval
+                        = 1000 * new DateTime(DateTime.Now.Year,
+                                DateTime.Now.Month,
+                                DateTime.Now.Day + 1, 0, 0, 0)
+                            .Subtract(DateTime.Now)
+                            .TotalSeconds;
+                }
+                catch (Exception)
+                {
+                    TimerDayOfWeek.Interval
+                        = 1000 * new DateTime(DateTime.Now.Year,
+                                DateTime.Now.Month + 1,
+                                1, 0, 0, 0)
+                            .Subtract(DateTime.Now)
+                            .TotalSeconds;
+                }
                 TimerDayOfWeek.Elapsed += TimerDayOfWeek_Elapsed;
                 TimerDayOfWeek.AutoReset = false;
                 TimerDayOfWeek.Enabled = true;
                 TimerDayOfWeek.Start();
-            } 
+            }
         }
 
         private static void TimerDayOfWeek_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -135,65 +135,63 @@ namespace Smart_school_bell.Model
         }
         private static void StartMusic()
         {
-            MediaPlayer player = new MediaPlayer();
-            if (times[0].Uri != null)
+            try
             {
-                player.Open(new Uri(times[0].Uri, UriKind.Absolute));
-                player.Play();
-                int timerErrorPlay = 0;
-                while (true)
+                MediaPlayer player = new MediaPlayer();
+                if (times[0].Uri != null)
                 {
-                    Thread.Sleep(1000);
-                    timerErrorPlay++;
-                    if (!player.HasAudio)
+                    player.Open(new Uri(times[0].Uri, UriKind.Absolute));
+                    player.Play();
+                    int timerErrorPlay = 0;
+                    while (true)
                     {
-                        if (timerErrorPlay >= 20)
+                        Thread.Sleep(1000);
+                        timerErrorPlay++;
+                        if (!player.HasAudio)
                         {
-                            MessageBox.Show("Проверьте расположение файла", "Ошибка воспроизведения файла (TtSM1)", MessageBoxButton.OK, MessageBoxImage.Error);
+                            if (timerErrorPlay >= 20)
+                            {
+                                MessageBox.Show("Проверьте расположение файла", "Ошибка воспроизведения файла (TtSM1)",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                break;
+                            }
+                        }
+                        else
+                        {
+
+                            int timer = 0;
+                            while (true)
+                            {
+                                Thread.Sleep(1000);
+                                timer++;
+                                if (timer == times[0].СallDuration)
+                                {
+                                    player.Close();
+                                    break;
+                                }
+
+                                if (player.Position.TotalSeconds == player.NaturalDuration.TimeSpan.TotalSeconds)
+                                {
+                                    player.Position = new TimeSpan(0, 0, 0);
+                                    player.Play();
+                                }
+
+                            }
+
                             break;
                         }
                     }
-                    else
-                    {
 
-                        int timer = 0;
-                        while (true)
-                        {
-                            Thread.Sleep(1000);
-                            timer++;
-                            if (timer == times[0].СallDuration)
-                            {
-                                player.Close();
-                                break;
-                            }
-
-                            if (player.Position.TotalSeconds == player.NaturalDuration.TimeSpan.TotalSeconds)
-                            {
-                                player.Position = new TimeSpan(0, 0, 0);
-                                player.Play();
-                            }
-
-                        }
-                        break;
-                    }
-                    //}
-                    //catch (Exception)
-                    //{
-                    //    MessageBox.Show("Измените расположение файла", "Ошибка загрузки файла", MessageBoxButton.OK, MessageBoxImage.Error);
-                    //}
-                }
                     StartTimerBell();
                 }
                 else
                 {
-                    MessageBox.Show("Проверьте расположение файла", "Ошибка воспроизведения файла (TtSM2)", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Проверьте расположение файла", "Ошибка воспроизведения файла (TtSM2)",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     StartTimerBell();
                 }
-            
-
-
-           
-            
+            }
+            catch { }
         }
     }
 }

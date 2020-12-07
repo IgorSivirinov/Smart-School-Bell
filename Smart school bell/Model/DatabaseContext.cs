@@ -9,6 +9,7 @@ namespace Smart_school_bell.Model
         public DbSet<Timetable> Timetables { get; set; }
         public DbSet<TimetableDayOfWeek> TimetableDayOfWeeks { get; set; }
         public DbSet<History> Histories { get; set; }
+        public DbSet<PasswordData> Passwords { get; set; }
 
     }
 }

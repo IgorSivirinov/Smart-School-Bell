@@ -33,6 +33,27 @@ namespace Smart_school_bell.ViewModel
             MenuNavigationChoice("Пн.");
         }
 
+        
+        public bool IsWorking
+        {
+            get{
+                using (var context = new DatabaseContext())
+                {
+                    return context.Timetables.Find(TimetableId).Working;
+                }
+            }
+
+            set
+            {
+                using (var context = new DatabaseContext())
+                {
+                    context.Timetables.Find(TimetableId).Working = value;
+                    context.SaveChanges();
+                }
+                OnPropertyChanged("IsWorking");
+                Timetable.StartTimerBell();
+            }
+        }
         public TimetablePageVM(){}
 
         private int TimetableId { get; set; }

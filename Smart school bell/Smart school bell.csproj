@@ -31,7 +31,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>0.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -154,9 +154,18 @@
     <Compile Include="Migrations\202011071427524_AddCompanyMigration2.designer.cs">
       <DependentUpon>202011071427524_AddCompanyMigration2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011151421115_AddCompanyMigration1.cs" />
+    <Compile Include="Migrations\202011151421115_AddCompanyMigration1.designer.cs">
+      <DependentUpon>202011151421115_AddCompanyMigration1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011291655520_AddCompanyMigration3.cs" />
+    <Compile Include="Migrations\202011291655520_AddCompanyMigration3.designer.cs">
+      <DependentUpon>202011291655520_AddCompanyMigration3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\DatabaseContext.cs" />
     <Compile Include="Model\History.cs" />
+    <Compile Include="Model\PasswordData.cs" />
     <Compile Include="Model\SortTimeHourMinModel.cs" />
     <Compile Include="Model\TimetableDayOfWeek.cs" />
     <Compile Include="ViewModel\DialogDeleteViewModel.cs" />
@@ -174,6 +183,9 @@
     </Compile>
     <Compile Include="View\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PasswordPage.xaml.cs">
+      <DependentUpon>PasswordPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SchedulesPage.xaml.cs">
       <DependentUpon>SchedulesPage.xaml</DependentUpon>
@@ -233,6 +245,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\PasswordPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SchedulesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -264,6 +280,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011071427524_AddCompanyMigration2.resx">
       <DependentUpon>202011071427524_AddCompanyMigration2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011151421115_AddCompanyMigration1.resx">
+      <DependentUpon>202011151421115_AddCompanyMigration1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011291655520_AddCompanyMigration3.resx">
+      <DependentUpon>202011291655520_AddCompanyMigration3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

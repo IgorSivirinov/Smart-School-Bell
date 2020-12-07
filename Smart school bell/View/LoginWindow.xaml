@@ -4,9 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Smart_school_bell.View"
-        mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800">
-    <Grid>
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" 
+        MinHeight="210" MaxHeight="210"
+        MinWidth="300" MaxWidth="300"
         
+        Title="Вход" Height="210" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="55"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Вход" FontSize="36" TextAlignment="Center" FontFamily="Calibri Light"/>
+        <PasswordBox Name="Password"
+                Grid.Row="1" Margin="10,10,10,0" 
+                 Height="40"
+                 materialDesign:HintAssist.Hint="Пароль"
+                KeyDown="KeyDownPas" PasswordChanged="Password_OnPasswordChanged"
+                VerticalAlignment="Top" FontFamily="Calibri" FontSize="24"/>
+        <Button Name="ButtonLogin"
+            Grid.Row="2" Width="110" Height="35"
+                Content="Войти" Click="LoginClick" IsEnabled="False"
+            FontSize="18"
+                Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <TextBlock Height="20" Width="80" Margin="10,0,-10,0" 
+                   Grid.Row="2" HorizontalAlignment="Left"  VerticalAlignment="Top">
+            <Hyperlink Click="PasswordReset">Сброс пароля</Hyperlink>
+        </TextBlock>
     </Grid>
 </Window>

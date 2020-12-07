@@ -84,18 +84,20 @@ namespace Smart_school_bell.ViewModel
                 context.Timetables.Add(new Timetable(name));
                 context.SaveChanges();
 
-                context.Timetables.Find(context.Timetables.Count()).Monday.TimetableId
-                    = context.Timetables.Find(context.Timetables.Count()).Id;
-                context.Timetables.Find(context.Timetables.Count()).Tuesday.TimetableId
-                    = context.Timetables.Find(context.Timetables.Count()).Id;
-                context.Timetables.Find(context.Timetables.Count()).Wednesday.TimetableId
-                    = context.Timetables.Find(context.Timetables.Count()).Id;
-                context.Timetables.Find(context.Timetables.Count()).Thursday.TimetableId
-                    = context.Timetables.Find(context.Timetables.Count()).Id;
-                context.Timetables.Find(context.Timetables.Count()).Friday.TimetableId
-                    = context.Timetables.Find(context.Timetables.Count()).Id;
-                context.Timetables.Find(context.Timetables.Count()).Saturday.TimetableId
-                    = context.Timetables.Find(context.Timetables.Count()).Id;
+                int id = context.Timetables.Max(t => t.Id);        
+
+                context.Timetables.Find(id).Monday.TimetableId
+                    = context.Timetables.Find(id).Id;
+                context.Timetables.Find(id).Tuesday.TimetableId
+                    = context.Timetables.Find(id).Id;
+                context.Timetables.Find(id).Wednesday.TimetableId
+                    = context.Timetables.Find(id).Id;
+                context.Timetables.Find(id).Thursday.TimetableId
+                    = context.Timetables.Find(id).Id;
+                context.Timetables.Find(id).Friday.TimetableId
+                    = context.Timetables.Find(id).Id;
+                context.Timetables.Find(id).Saturday.TimetableId
+                    = context.Timetables.Find(id).Id;
                 History.GetToDatabase(new History(DateTime.Now, "Создано расписание " + name));
                 context.SaveChanges();
                 

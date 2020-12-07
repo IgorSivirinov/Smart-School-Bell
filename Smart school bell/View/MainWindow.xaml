@@ -6,7 +6,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:viewModel="clr-namespace:Smart_school_bell.ViewModel"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:smartSchoolBell="clr-namespace:Smart_school_bell"
+        xmlns:smartSchoolBell="clr-namespace:Smart_school_bell" 
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         MinHeight="150" MinWidth="780"
         Title="Smart School Bell">
@@ -14,16 +15,26 @@
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="500*"/>
-            </Grid.RowDefinitions>
-            <Menu Grid.Row="0" Grid.ColumnSpan="2">
-                <MenuItem Header="Расписания" Command="{Binding ComGoSchedules}"/>
-                <MenuItem Header="История" Command="{Binding ComGoHistory}"/>
-            </Menu>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" IsMainMenu="True" Height="25" Margin="0,0" VerticalAlignment="Top" >
+            <MenuItem Header="Расписания" Height="25" Command="{Binding ComGoSchedules}"/>
+            <MenuItem Header="История" Height="25" Command="{Binding ComGoHistory}"/>
+            <MenuItem Header="Пароль" Height="25" Command="{Binding ComGoPassword}"/>
+        </Menu>
+        <Button Grid.Row="0"
+                Width="50"
+                Height="25"
+                FontSize="14"
+                Visibility="{Binding VisibilityButtonOut}"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                Command="{Binding ComLogOff}" Margin="3,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <materialDesign:PackIcon Kind="Logout" />
+        </Button>
         <Frame
                 NavigationUIVisibility="Hidden"
-                Content="{Binding MainFrame}" Grid.Row="1"/>
+                Content="{Binding MainFrame}" Grid.Row="1" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

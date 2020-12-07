@@ -8,9 +8,18 @@ namespace Smart_school_bell
     /// </summary>
     public partial class MainWindow : Window
     {
+        
         public MainWindow()
         {
             InitializeComponent();
+            var viewModel = (MainWindowViewModel) DataContext;
+            viewModel.ThisWindow = this;
+            DataContext = viewModel;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

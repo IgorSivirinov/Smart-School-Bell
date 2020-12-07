@@ -17,78 +17,78 @@
     IsOpen="{Binding IsDialogOpen}"
     DialogContent="{Binding DialogContent}"
     CloseOnClickAway="True">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25*"/>
-            <ColumnDefinition Width="75*"/>
-        </Grid.ColumnDefinitions>
-        
-        <GroupBox
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="75*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox
             Header="Расписания"
             Style="{DynamicResource MaterialDesignCardGroupBox}">
-            <Grid Margin="-10">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding NavigationItemsItemsControl}" >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="viewModel:MainWindowNavigationItemViewModel" >
-                                <Border 
+                <Grid Margin="-10">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding NavigationItemsItemsControl}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="viewModel:MainWindowNavigationItemViewModel" >
+                                    <Border 
                                 x:Name="Border"
                                 Background="{Binding ItemBackground}"
                                 Padding="8">
-                                    <Border.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Переменовать" Command="{Binding ComRenameTimetable}"/>
-                                            <MenuItem Header="Удалить" Command="{Binding ComDelete}"/>
-                                        </ContextMenu>
-                                    </Border.ContextMenu>
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                            <i:InvokeCommandAction
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Переменовать" Command="{Binding ComRenameTimetable}"/>
+                                                <MenuItem Header="Удалить" Command="{Binding ComDelete}"/>
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                                <i:InvokeCommandAction
                                             Command="{Binding ComClick}"/>
-                                        </i:EventTrigger>
-                                        <i:EventTrigger EventName="MouseEnter">
-                                            <i:InvokeCommandAction
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="MouseEnter">
+                                                <i:InvokeCommandAction
                                             Command="{Binding MouseEnter}"/>
-                                        </i:EventTrigger>
-                                        <i:EventTrigger EventName="MouseLeave">
-                                            <i:InvokeCommandAction
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="MouseLeave">
+                                                <i:InvokeCommandAction
                                             Command="{Binding MouseLeave}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
 
-                                    <Grid >
-                                        <TextBlock Text="{Binding Timetable.Name}"/>
-                                    </Grid>
-                                </Border>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger
+                                        <Grid >
+                                            <TextBlock Text="{Binding Timetable.Name}" Grid.Column="0"/>
+                                        </Grid>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger
                                     Binding="{Binding IsSelected}"
                                     Value="True">
-                                        <Setter
+                                            <Setter
                                         TargetName="Border"
                                         Property="Background"
                                         Value="#E0E0E0" />
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
 
-                <Button Grid.Column="0" Margin="0,0,15,10" 
+                    <Button Grid.Column="0" Margin="0,0,15,10" 
                             HorizontalAlignment="Right"  VerticalAlignment="Bottom" 
                             Command="{Binding ComNewTimetable}"
                         Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
                         ToolTip="MaterialDesignFloatingActionAccentButton">
-                    <materialDesign:PackIcon Kind="Add" Height="24" Width="24" />
-                </Button>
-            </Grid>
-        </GroupBox>
+                        <materialDesign:PackIcon Kind="Add" Height="24" Width="24" />
+                    </Button>
+                </Grid>
+            </GroupBox>
 
-        <Frame
+            <Frame
                 Grid.Column="1"
                 NavigationUIVisibility="Hidden"
                 Content="{Binding TimetablePage}"/>
-    </Grid>
-        </materialDesign:DialogHost>
+        </Grid>
+    </materialDesign:DialogHost>
 </Page>
