@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <!-- путь к директории где хранятся исх. файлы ..\AppSample\bin\Debug-->
+  <?define TargetDir=$(var.SmartSchoolBellCore.TargetDir)?>
+  <!--наименование проекта ("AppSample")-->
+  <?define ProductName=$(var.SmartSchoolBellCore.ProjectName)?>
+  <!--Наименование исполняемого файла-->
+  <?define TargetFileName=$(var.SmartSchoolBellCore.TargetFileName)?>
+  <?define description="Демонстрация примера WiX"?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="" UpgradeCode="3f72cb03-7d7f-441f-b006-be70c1e8835a">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate  EmbedCab="yes"/>
+
+    <!--Вызов компонентов по ссылкам на них-->
+    <Feature Id="ProductFeature" Title="InstallAppSaple" Level="1">
+      <ComponentRef Id="ProductComponents" />
+      <ComponentRef Id="ShortcutMenu"/>
+      <ComponentRef Id="ShortcutDesktop"/>
+    </Feature>
+
+    <Icon Id="del" SourceFile="del.ico"/>
+
+    <!--Значoк приложения в - "Установка и Удаление программ", Панели Управления-->
+    <Property Id="ARPPRODUCTICON" Value="del" />
+
+    <!-- Запустить приложение после инсталляции   -->
+    <CustomAction Id="LaunchInstalledExe" Directory="INSTALLFOLDER"  Execute="immediate" Impersonate="yes"
+                  Return="asyncNoWait" ExeCommand="[#$(var.TargetFileName)] -install"  />
+    <InstallExecuteSequence>
+      <Custom Action='LaunchInstalledExe' After='InstallFinalize'/>
+    </InstallExecuteSequence>
+	</Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+
+      <!--системная папка Program Files-->
+      <Directory Id="ProgramFilesFolder">
+        <!-- вложеная папка с именем "AppSample" куда будут помещены исходные файлами при инсталяции-->
+        <Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="decktop"/>
+
+      <!-- системная папка Гл. Меню-->
+      <Directory Id="ProgramMenuFolder" Name="MenuFolder" >
+        <!--Папка с ярлыками в Гл. Меню -->
+        <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)" />
+
+      </Directory>
+    </Directory>
+  </Fragment>
+
+
+
+  <Fragment>
+    <Component  Id="ProductComponents" Guid="3f72cb03-7d7f-441f-b006-be70c1e8835a"   Directory="INSTALLFOLDER" >
+      <File  Name="$(var.TargetFileName).config" Source="$(var.TargetDir)" />
+      <File Name="$(var.TargetFileName)" Source="$(var.TargetDir)"/>
+    </Component>
+  </Fragment>
+
+  <Fragment>
+    <Component Id="ShortcutMenu" Guid="{58066934-AC66-43B4-A674-85A8970DC3C5}"  Directory="ApplicationProgramsFolder">
+      <!-- Создать ярлык запуска приложения в Program Menu-->
+      <Shortcut Id="StartMenu" Name="$(var.ProductName)"  Description="$(var.description)" Target ="[INSTALLFOLDER]$(var.TargetFileName)" />
+      <!--Удалить ярлык приложения из меню программы при удалении-->
+      <RemoveFolder Id="RemoveShortcut"  On="uninstall"/>
+      <!-- Cоздать запись приложения в реестре -->
+      <Registry Root="HKCU" Key="SoftWare\[Manufacturer]\[ProductName]" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+
+      <!-- Удалить приложение. Ярлык Удаление приложения-->
+      <Shortcut Id="UninstallProduct" Name="Удалить $(var.ProductName)" Target="[SystemFolder]msiexec.exe" Arguments="/uninstall [ProductCode]"  Icon="del"/>
+    </Component>
+  </Fragment>
+
+  <Fragment>
+    <!-- Создать ярлык на рабочем столе -->
+    <Component Id="ShortcutDesktop" Guid="{5B45E98F-6544-4A68-93F8-1D6FF0BD4E50}" Directory="DesktopFolder" >
+      <Shortcut Id="ShortcutDesktop" Name="$(var.ProductName)"   Description="$(var.description)" Target ="[INSTALLFOLDER]$(var.TargetFileName)" />
+      <RemoveFolder Id="RemoveDesktopFolder" Directory="DesktopFolder" On="uninstall" />
+      <Registry Root="HKCU" Key="SoftWare\[Manufacturer]\[ProductName]" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+    </Component>
+  </Fragment>
+</Wix>

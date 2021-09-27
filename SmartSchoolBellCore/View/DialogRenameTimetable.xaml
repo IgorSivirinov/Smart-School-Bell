@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="SmartSchoolBellCore.View.DialogRenameTimetable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SmartSchoolBellCore.View"
+             xmlns:viewModel="clr-namespace:SmartSchoolBellCore.ViewModel"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}" Height="160" Width="290">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="8"
+                   Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                   Text="Переименовать расписание"/>
+
+        <TextBox Grid.Row="1" Margin="10,0,10,10" 
+                 Text="{Binding TextName, ValidatesOnDataErrors=True
+            ,UpdateSourceTrigger=PropertyChanged}"
+                 materialDesign:HintAssist.Hint="Название"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" >
+            <TextBox.InputBindings>
+                <KeyBinding Command="{Binding ComRename}" Key="Enter" />
+            </TextBox.InputBindings>
+        </TextBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Width="250" Margin="0,0,10,0" >
+            <Button Margin="8" Content="Отмена" Command="{Binding ComCancel}" 
+                    Style="{StaticResource MaterialDesignFlatButton}"></Button>
+            <Button Margin="8" 
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    IsEnabled="{Binding IsEnabledButtonCreate}"
+                    Content="Переименовать" Command="{Binding ComRename}"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

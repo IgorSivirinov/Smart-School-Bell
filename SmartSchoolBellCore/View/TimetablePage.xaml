@@ -1,0 +1,223 @@
+﻿<Page x:Class="SmartSchoolBellCore.View.TimetablePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SmartSchoolBellCore.View"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:viewModel="clr-namespace:SmartSchoolBellCore.ViewModel"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="TimetablePage">
+
+
+    <Page.Resources>
+        <DataTemplate x:Key="ItemCallTimes" DataType="viewModel:ItemCallTimesViewModel">
+            <materialDesign:Card
+                Margin="8,8,8,8"
+                Height="50" Width="115">
+                <materialDesign:Card.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem
+                            Header="Удалить" Command="{Binding DeleteItem}"/>
+                    </ContextMenu>
+                </materialDesign:Card.ContextMenu>
+                <Grid>
+                    <TextBlock  Text="{Binding Text}" FontSize="26"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                </Grid>
+
+            </materialDesign:Card>
+        </DataTemplate >
+        <DataTemplate x:Key="ButtonAddItemCallTimes" DataType="viewModel:ItemCallTimesViewModel">
+            <Button Command="{Binding RunDialogAddItem}" Height="50" Width="115" Margin="8,8,8,8">
+                <materialDesign:PackIcon Kind="Add" />
+            </Button>
+        </DataTemplate>
+    </Page.Resources>
+
+    <materialDesign:DialogHost
+        IsOpen="{Binding IsDialogOpen}"
+        DialogContent="{Binding DialogContent}"
+        CloseOnClickAway="True">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Column="1" Margin="8,8,8,0" >
+
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="155"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" 
+                               Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Параметры расписания" Height="35" VerticalAlignment="Top" />
+                    <Grid Row="1" Margin="10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Height="24" FontSize="16" Text="Выключить\Включить" TextAlignment="Center" LineHeight="9"/>
+                        <ToggleButton Grid.Column="1" Height="24" IsChecked="{Binding IsWorking}" Margin="10,0"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Звук" Height="35" VerticalAlignment="Top" />
+                    <TextBox Grid.Row="1" Grid.Column="0" Margin="10,0,8,0"
+                             materialDesign:HintAssist.Hint="Расположение файла"
+                             IsEnabled="False"
+                             Text="{Binding TextUriFile}"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" Height="50" VerticalAlignment="Top"/>
+                    <Button Grid.Row="1" Grid.Column="1" Margin="10,18,10,0" 
+                            Content="Обзор" VerticalAlignment="Top" 
+                            Command="{Binding ComOpenDialogFile}"/>
+                </Grid>
+                <Grid Grid.Row="2" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                               Text="Время звонков" Margin="0,30,0,0" />
+                    <StackPanel Grid.Row="1" Margin="8,0,0,0"
+                        Orientation="Horizontal" >
+                        <RadioButton
+                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                        Margin="4"
+                        IsChecked="True"
+                        Content="Пн."
+                        Command="{Binding MenuNavigation}" CommandParameter="Пн.">
+                            <RadioButton.ContextMenu>
+
+                                <ContextMenu>
+                                    <MenuItem Header="Импорт c Пн." 
+                                          Command="{Binding ComImportMenuNavigation}"
+                                          CommandParameter="Пн."/>
+                                    <MenuItem Header="Очистить Пн." 
+                                              Command="{Binding ComDeleteMenuNavigation}"
+                                              CommandParameter="Пн."/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
+                        <RadioButton
+                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                        Margin="4"
+                        IsChecked="False"
+                        Content="Вт." 
+                        Command="{Binding MenuNavigation}" CommandParameter="Вт.">
+                            <RadioButton.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Импорт c Вт." 
+                                          Command="{Binding ComImportMenuNavigation}"
+                                          CommandParameter="Вт."/>
+                                    <MenuItem Header="Очистить Вт." 
+                                              Command="{Binding ComDeleteMenuNavigation}"
+                                              CommandParameter="Вт."/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
+                        <RadioButton
+                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                        Margin="4"
+                        IsChecked="False"
+                        Content="Ср." 
+                        Command="{Binding MenuNavigation}" CommandParameter="Ср.">
+                            <RadioButton.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Импорт c Ср." 
+                                          Command="{Binding ComImportMenuNavigation}"
+                                          CommandParameter="Ср."/>
+                                    <MenuItem Header="Очистить Ср." 
+                                              Command="{Binding ComDeleteMenuNavigation}"
+                                              CommandParameter="Ср."/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
+                        <RadioButton
+                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                        Margin="4"
+                        IsChecked="False"
+                        Content="Чт." 
+                        Command="{Binding MenuNavigation}" CommandParameter="Чт.">
+                            <RadioButton.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Импорт c Чт." 
+                                          Command="{Binding ComImportMenuNavigation}"
+                                          CommandParameter="Чт."/>
+                                    <MenuItem Header="Очистить Чт." 
+                                              Command="{Binding ComDeleteMenuNavigation}"
+                                              CommandParameter="Чт."/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
+                        <RadioButton
+                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                        Margin="4"
+                        IsChecked="False"
+                        Content="Пт." 
+                        Command="{Binding MenuNavigation}" CommandParameter="Пт.">
+                            <RadioButton.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Импорт c Пт." 
+                                          Command="{Binding ComImportMenuNavigation}"
+                                          CommandParameter="Пт."/>
+                                    <MenuItem Header="Очистить Пт." 
+                                              Command="{Binding ComDeleteMenuNavigation}"
+                                              CommandParameter="Пт."/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
+                        <RadioButton
+                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                        Margin="4"
+                        IsChecked="False"
+                        Content="Су." 
+                        Command="{Binding MenuNavigation}" CommandParameter="Су.">
+                            <RadioButton.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Импорт c Су." 
+                                          Command="{Binding ComImportMenuNavigation}"
+                                          CommandParameter="Су."/>
+                                    <MenuItem Header="Очистить Су." 
+                                              Command="{Binding ComDeleteMenuNavigation}"
+                                              CommandParameter="Су."/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
+                    </StackPanel>
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding ItemsTimeBell}" >
+                        <ItemsControl.ItemTemplateSelector>
+                            <viewModel:ItemsControlCallTimes 
+                                ItemCallTimes="{StaticResource ItemCallTimes}"
+                                ButtonAddItemCallTimes="{StaticResource ButtonAddItemCallTimes}"/>
+                        </ItemsControl.ItemTemplateSelector>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+            </Grid>
+        </ScrollViewer>
+    </materialDesign:DialogHost>
+</Page>
