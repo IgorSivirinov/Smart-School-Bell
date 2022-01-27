@@ -3,8 +3,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
+
 using SmartSchoolBellCore.Model;
 using SmartSchoolBellCore.View;
 using static SmartSchoolBellCore.Services.StartBellService;
@@ -13,6 +16,7 @@ namespace SmartSchoolBellCore.ViewModel
 {
     public class SchedulesPageViewModel : INotifyPropertyChanged
     {
+        private Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<MainWindowNavigationItemViewModel> NavigationItemsItemsControl { get; set; }
@@ -69,7 +73,7 @@ namespace SmartSchoolBellCore.ViewModel
         public SchedulesPageViewModel()
         {
             LoadingTimetables();
-            StartTimerBell();
+            Task.Run(async () => await StartTimerBell(_dispatcher));
         }
 
         private void NewTimetable(string name)
@@ -159,7 +163,7 @@ namespace SmartSchoolBellCore.ViewModel
 
                 context.SaveChanges();
             }
-            StartTimerBell();
+            Task.Run(async () => await StartTimerBell(_dispatcher));
             App.RestartMainWindow();
         }
 

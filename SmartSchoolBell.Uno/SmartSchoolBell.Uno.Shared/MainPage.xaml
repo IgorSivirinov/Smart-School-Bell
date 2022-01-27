@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="SmartSchoolBell.Uno.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SmartSchoolBell.Uno"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"    
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <muxc:NavigationView x:Name="MainNavigationView" ItemInvoked="MainNavigationView_OnItemInvoked" PaneDisplayMode="Top">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem  Content="Расписания" Icon="Clock" Tag="SamplePage1" x:Name="TimetableNaviView" />
+                <muxc:NavigationViewItem  Content="История" Tag="SamplePage2" >
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+          </muxc:NavigationView.MenuItems>
+            <Frame x:Name="MainFrame"/>
+        </muxc:NavigationView>
+    </Grid>
+</Page>

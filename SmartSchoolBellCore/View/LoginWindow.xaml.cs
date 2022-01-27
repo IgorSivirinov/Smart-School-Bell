@@ -24,7 +24,7 @@ namespace SmartSchoolBellCore.View
         public LoginWindow()
         {
             InitializeComponent();
-            StartTimerBell();
+            Task.Run(async () => await StartTimerBell(Dispatcher));
             if (!PasswordData.CheckEmptyPasswords()) return;
             App.ShowMainWindow();
             Close();

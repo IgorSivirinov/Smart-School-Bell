@@ -21,7 +21,7 @@ namespace SmartSchoolBellCore.Extension
                 "Ср." => 3,
                 "Чт." => 4,
                 "Пт." => 5,
-                "Су." => 6,
+                "Сб." => 6,
                 _ => throw new ArgumentOutOfRangeException(nameof(dayOfWeekString), dayOfWeekString, null)
             }];
         }

@@ -59,11 +59,12 @@
                                Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Параметры расписания" Height="35" VerticalAlignment="Top" />
                     <Grid Row="1" Margin="10,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="45"/>
+                            <ColumnDefinition Width="115.467"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Height="24" FontSize="16" Text="Выключить\Включить" TextAlignment="Center" LineHeight="9"/>
-                        <ToggleButton Grid.Column="1" Height="24" IsChecked="{Binding IsWorking}" Margin="10,0"/>
+                        <TextBlock Grid.Column="0" Height="24" FontSize="16" Text="Выключить\Включить" TextAlignment="Center" LineHeight="9" Grid.ColumnSpan="2"/>
+                        <ToggleButton Grid.Column="2" Height="24" IsChecked="{Binding IsWorking}" Margin="10,0,10,0"/>
                     </Grid>
                 </Grid>
 
@@ -189,16 +190,16 @@
                         Style="{StaticResource MaterialDesignTabRadioButton}"
                         Margin="4"
                         IsChecked="False"
-                        Content="Су." 
-                        Command="{Binding MenuNavigation}" CommandParameter="Су.">
+                        Content="Сб." 
+                        Command="{Binding MenuNavigation}" CommandParameter="Сб.">
                             <RadioButton.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Импорт c Су." 
+                                    <MenuItem Header="Импорт c Сб." 
                                           Command="{Binding ComImportMenuNavigation}"
-                                          CommandParameter="Су."/>
-                                    <MenuItem Header="Очистить Су." 
+                                          CommandParameter="Сб."/>
+                                    <MenuItem Header="Очистить Сб." 
                                               Command="{Binding ComDeleteMenuNavigation}"
-                                              CommandParameter="Су."/>
+                                              CommandParameter="Сб."/>
                                 </ContextMenu>
                             </RadioButton.ContextMenu>
                         </RadioButton>

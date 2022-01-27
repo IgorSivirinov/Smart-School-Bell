@@ -17,8 +17,6 @@ namespace SmartSchoolBellCore.Services
 {
     public static class StartBellService
     {
-        public static IDisposable BellObservableDisposable { get; set; }
-
         public static async Task StartOperationIfThereTimetable (DatabaseContext context, TimeSpan timeSpanCurrent, DayOfWeek dayOfWeekNow, Action<TimeSpan, Uri> operation)
         {
             var passCounter = 0;
@@ -61,6 +59,7 @@ namespace SmartSchoolBellCore.Services
                     var currentUri = new Uri(timetableDayOfWeek.Timetable.UriFile);
 
                     operation(new TimeSpan(minTime.Hour, minTime.Min, 0).Subtract(timeSpanCurrent), currentUri);
+                    break;
                 }
                 passCounter++;
                 dateNowNumber++;
@@ -68,47 +67,24 @@ namespace SmartSchoolBellCore.Services
             }
         }
 
-        public static async Task  StartTimerBell()
+        public static async Task StartTimerBell(Dispatcher _dispatcher = null)
         {
-            if (BellObservableDisposable != null) BellObservableDisposable.Dispose();
-
             var dateNow = DateTime.Now;
             var timeSpanNow = new TimeSpan(dateNow.Hour, dateNow.Minute, dateNow.Second);
             await using var context = new DatabaseContext();
             await StartOperationIfThereTimetable(context, timeSpanNow, dateNow.DayOfWeek, (time, uri) =>
             {
-                var player = new MediaPlayer();
-                player.MediaFailed += (s, e) =>
+                App.StaticDispatcher.BeginInvoke(() =>
                 {
-                    MessageBox.Show("Проверьте расположение файла",
-                        "Ошибка воспроизведения файла (TtSM1)",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                };
-                player.Open(uri);
-                BellObservableDisposable = Observable.Timer(time)
-                    .ObserveOnDispatcher()
-                    .SubscribeOn(Scheduler.CurrentThread)
+                    if (App.BellObservableDisposable != null) App.BellObservableDisposable.Dispose();
+
+                    App.BellObservableDisposable = Observable.Timer(time)
                     .Subscribe(t =>
                     {
-                        try
-                        {
-                            if (!player.HasAudio)
-                            {
-                                MessageBox.Show("Проверьте расположение файла",
-                                    "Ошибка воспроизведения файла (TtSM2)",
-                                    MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-
-                            player.Play();
-
-                            StartTimerBell();
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Проверьте расположение файла", "Ошибка воспроизведения файла (TtSM2)",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        App.StaticDispatcher.BeginInvoke(() => App.Player.Open(uri));
+                        Task.Run(async () => await StartTimerBell());
                     });
+                });
             });
         }
     }

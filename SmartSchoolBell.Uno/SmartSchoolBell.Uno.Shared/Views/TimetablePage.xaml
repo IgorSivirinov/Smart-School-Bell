@@ -1,0 +1,87 @@
+﻿<Page
+    x:Class="SmartSchoolBell.Uno.Views.TimetablePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SmartSchoolBell.Uno.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Column="1" Margin="8,8,8,0" >
+
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Параметры расписания" Height="35" VerticalAlignment="Top" />
+                    <Grid Row="1" Margin="10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="45"/>
+                            <ColumnDefinition Width="115"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Height="24" FontSize="16" Text="Выключить\Включить" TextAlignment="Center" LineHeight="9" Grid.ColumnSpan="2"/>
+                        <ToggleButton Grid.Column="2" Height="24" IsChecked="{Binding IsWorking}" Margin="10,0,10,0"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                        Text="Звук" Height="35" VerticalAlignment="Top" />
+                    <TextBox x:Name="UrlFileTextBox"
+                        Grid.Row="1" Grid.Column="0" Margin="10,0,8,0"
+                             PlaceholderText="Расположение файла"
+                             IsEnabled="False"
+                             Height="50" VerticalAlignment="Top"/>
+                    <Button x:Name="ComOpenDialogFile"
+                        Grid.Row="1" Grid.Column="1" Margin="10,18,10,0" 
+                            Content="Обзор" VerticalAlignment="Top" 
+                            Command="{Binding ComOpenDialogFile}"/>
+                </Grid>
+                <Grid Grid.Row="2" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Text="Время звонков" Margin="0,30,0,0" />
+                    <muxc:NavigationView Grid.Row="1"
+                                         IsSettingsVisible="False"
+                                         IsBackButtonVisible="Collapsed"
+                                         IsBackEnabled="False"
+                                         Header="Sample Page 1"
+                                         AlwaysShowHeader="False"
+                                         PaneTitle="Pane Title"
+                                         PaneDisplayMode="Top"
+                                         ExpandedModeThresholdWidth="500"
+                                         SelectionFollowsFocus="Disabled"
+                                         IsTabStop="False">
+
+                    </muxc:NavigationView>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

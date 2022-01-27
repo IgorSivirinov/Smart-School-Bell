@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,8 +48,6 @@ namespace SmartSchoolBellCore.ViewModel
 
         public MainWindowViewModel()
         {
-            History.GetToDatabaseAsync(new (), new History(DateTime.Now, "Вход в приложение"));
-
             MainFrame = new SchedulesPage();
 
             if (!PasswordData.CheckEmptyPasswords())

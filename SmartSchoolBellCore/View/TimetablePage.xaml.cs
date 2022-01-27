@@ -12,6 +12,7 @@ namespace SmartSchoolBellCore.View
         {
             InitializeComponent();
             DataContext = viewModel;
+            
         }
     }
 }
