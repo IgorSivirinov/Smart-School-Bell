@@ -193,18 +193,23 @@ namespace SmartSchoolBellCore.ViewModel
                 await context.TimeHourMins.AddAsync(timeHourMin);
                 await context.SaveChangesAsync();
 
-                await StartTimerBell(_dispatcher);
 
-                ListTimeBell.Add(timeHourMin);
-                var index = ListTimeBell.OrderBy(x => x.Hour * 60 + x.Min).ToList().IndexOf(timeHourMin);
-
-                ItemsTimeBell.Insert(index, new(new(timeHourMin.Hour, timeHourMin.Min, 0), index));
                 MenuNavigationChoice(_menuNavigationDayOfWeek);
 
                 await History.GetToDatabaseAsync(context, new History(DateTime.Now, "Звонок на "
-                                                                + new TimeSpan(hour, min, 0).ToString("HH:mm") +
-                                                                " создан в расписании " +
-                                                                (await context.Timetables.FindAsync(TimetableId)).Name));
+                                + new TimeSpan(hour, min, 0).ToString(@"hh\:mm") +
+                                " создан в расписании " +
+                                (await context.Timetables.FirstAsync(x => x.Id == TimetableId)).Name));
+
+                await Task.Run(async () => await StartTimerBell(_dispatcher));
+
+                //ListTimeBell.Add(timeHourMin);
+                //var index = ListTimeBell.OrderBy(x => x.Hour * 60 + x.Min).ToList().IndexOf(timeHourMin);
+
+                //ItemsTimeBell.Insert(index, new(new(timeHourMin.Hour, timeHourMin.Min, 0), index));
+                
+
+
             }
         }
 
@@ -221,8 +226,10 @@ namespace SmartSchoolBellCore.ViewModel
                     " удалён из расписания " +
                     name));
             }
-            await Task.Run(async () => await StartTimerBell(_dispatcher));
+
             MenuNavigationChoice(_menuNavigationDayOfWeek);
+
+            await Task.Run(async () => await StartTimerBell(_dispatcher));
         }
 
         public ICommand ComOpenDialogFile => new DelegateCommand(o =>
@@ -271,6 +278,7 @@ namespace SmartSchoolBellCore.ViewModel
                     await History.GetToDatabaseAsync(context,
                         new History(DateTime.Now,
                             (string) o + " из расписании " + context.Timetables.Find(TimetableId).Name + " очищен(а)"));
+                    MenuNavigationChoice(_menuNavigationDayOfWeek);
                     await StartTimerBell(_dispatcher);
                 });    
         });

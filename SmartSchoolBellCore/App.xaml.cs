@@ -12,9 +12,6 @@ using System.Windows.Threading;
 
 namespace SmartSchoolBellCore
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         public static IDisposable BellObservableDisposable { get; set; }

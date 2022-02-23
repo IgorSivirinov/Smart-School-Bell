@@ -17,11 +17,11 @@ namespace SmartSchoolBellCore.Services
 {
     public static class StartBellService
     {
-        public static async Task StartOperationIfThereTimetable (DatabaseContext context, TimeSpan timeSpanCurrent, DayOfWeek dayOfWeekNow, Action<TimeSpan, Uri> operation)
+        public static async Task StartOperationIfThereTimetable (DatabaseContext context, TimeSpan timeSpanCurrent, DayOfWeek dayOfWeekNow, Action<TimeSpan, TimeSpan, Uri> operation)
         {
             var passCounter = 0;
             var dateNowNumber = (int) dayOfWeekNow;
-            while (passCounter < 7)
+            while (passCounter <= 7)
             {
                 var totalMinutes = timeSpanCurrent.TotalMinutes;
                 var number = dateNowNumber;
@@ -32,33 +32,33 @@ namespace SmartSchoolBellCore.Services
                         .Where(timetable => timetable.Timetable.Working)
                         .Where(timetable => timetable.DayOfWeekNumber == number)
                         .Where(
-                            timetable =>
+                            timetable => 
                                 timetable.TimeBells.Any(
-                                    timeBell =>
-                                        timeBell.Hour * 60 + timeBell.Min > totalMinutes))
+                                    timeBell => passCounter == 0 ? (timeBell.Hour * 60 + timeBell.Min > totalMinutes) : true))
                         .ToListAsync();
 
                 if (timesFromCurrentDayOfWeek.Count != 0)
                 {
-                    await Task.Delay(2000);
                     var timetableDayOfWeek = timesFromCurrentDayOfWeek.OrderBy(timetableDayOfWeek =>
                         {
                             var timeBell = timetableDayOfWeek.TimeBells
-                                .Where(timeBell => timeBell.Hour * 60 + timeBell.Min > totalMinutes)
+                                .Where(timeBell => passCounter == 0 ? (timeBell.Hour * 60 + timeBell.Min > totalMinutes) : true)
                                 .OrderBy(timeBell => timeBell.Hour * 60 + timeBell.Min).First();
                             return timeBell.Hour * 60 + timeBell.Min;
                         })
                         .First();
 
                     var minTime = timetableDayOfWeek.TimeBells.Where(timeBell =>
-                            timeBell.Hour * 60 + timeBell.Min > totalMinutes)
+                            passCounter == 0 ? (timeBell.Hour * 60 + timeBell.Min > totalMinutes) : true)
                         .OrderBy(timeBell => timeBell.Hour * 60 + timeBell.Min).First();
+
+                    var nextTime = new TimeSpan(minTime.Hour, minTime.Min, 0);
 
                     minTime.Hour += 24 * passCounter;
 
                     var currentUri = new Uri(timetableDayOfWeek.Timetable.UriFile);
 
-                    operation(new TimeSpan(minTime.Hour, minTime.Min, 0).Subtract(timeSpanCurrent), currentUri);
+                    operation(nextTime, new TimeSpan(minTime.Hour, minTime.Min, 0).Subtract(timeSpanCurrent), currentUri);
                     break;
                 }
                 passCounter++;
@@ -72,19 +72,25 @@ namespace SmartSchoolBellCore.Services
             var dateNow = DateTime.Now;
             var timeSpanNow = new TimeSpan(dateNow.Hour, dateNow.Minute, dateNow.Second);
             await using var context = new DatabaseContext();
-            await StartOperationIfThereTimetable(context, timeSpanNow, dateNow.DayOfWeek, (time, uri) =>
+            await StartOperationIfThereTimetable(context, timeSpanNow, dateNow.DayOfWeek, (nextTime, time, uri) =>
             {
-                App.StaticDispatcher.BeginInvoke(() =>
-                {
-                    if (App.BellObservableDisposable != null) App.BellObservableDisposable.Dispose();
-
-                    App.BellObservableDisposable = Observable.Timer(time)
-                    .Subscribe(t =>
+                    App.StaticDispatcher.BeginInvoke(() =>
                     {
-                        App.StaticDispatcher.BeginInvoke(() => App.Player.Open(uri));
-                        Task.Run(async () => await StartTimerBell());
+                        //MessageBox.Show($"{time}", "ete", MessageBoxButton.OK, MessageBoxImage.Information);
+                        if (App.BellObservableDisposable != null) App.BellObservableDisposable.Dispose();
+                        time.Add(new(0, 0, 2));
+                        App.BellObservableDisposable = Observable.Timer(time)
+                        .Subscribe(t =>
+                        {
+                            var dateNow = DateTime.Now;
+                            var timeSpanNow = new TimeSpan(dateNow.Hour, dateNow.Minute, dateNow.Second);
+
+                            if (timeSpanNow.TotalSeconds - timeSpanNow.TotalSeconds - 2 <= 0)
+                                App.StaticDispatcher.BeginInvoke(() => App.Player.Open(uri));
+                            
+                            Task.Run(async () => await StartTimerBell());
+                        });
                     });
-                });
             });
         }
     }
